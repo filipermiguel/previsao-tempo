@@ -48,7 +48,7 @@ Responsivo;
 
 ## Considerações
 
-Realizada a implementação desta página HTML acessando as APIs de localidades do IBGE e de clima do ClimaTempo. A página é responsiva sendo testada em chrome em desktop e IPhone 7. Tive dificuldades em encontrar uma API de clima que seja gratuita e traga as informações solicitadas no teste como estado, nem todas as APIs internacionais possuem e boa parte delas é paga. De API brasileira foi encontrada a ClimaTempo porém esta não funciona com páginas HTML onde o host da máquina é localhost, sendo que o filtro CORS do servidor do ClimaTempo ou não está configurado ou está configurado para não receber requests GET de servidores deste tipo. Enfim, para funcionar foi necessário instalar um plugin no Chrome chamado Allow-Control-Allow-Origin: * para realizar estas requisições.
+Realizada a implementação desta página HTML acessando as APIs de localidades do IBGE e de clima do ClimaTempo. A página é responsiva sendo testada em chrome em desktop e IPhone 7. Tive dificuldades em encontrar uma API de clima que seja gratuita e traga as informações solicitadas no teste como estado, nem todas as APIs internacionais possuem e boa parte delas é paga. De API brasileira foi encontrada a ClimaTempo porém esta não funciona com páginas HTML onde o host da máquina é localhost, sendo que o filtro CORS do servidor do ClimaTempo ou não está configurado ou está configurado para não receber requests GET de servidores deste tipo. Enfim, para funcionar foi necessário instalar um plugin no Chrome chamado <b>Allow-Control-Allow-Origin: *<b> para realizar estas requisições.
 
 Mais informações sobre as APIs em:
 https://servicodados.ibge.gov.br/api/docs/localidades
