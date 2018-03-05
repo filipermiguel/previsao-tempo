@@ -1,0 +1,18 @@
+.corFundo{
+  background-color: white
+}
+
+.temp-color{
+  background-color: lightgreen}
+
+.button{
+  padding-top: 5%;
+}
+
+.colorMsg{
+  background-color: rgb(240, 239, 239);
+}
+
+.box.box-info {
+  border-top-color:lightgreen;
+}

@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Previsão do Tempo</title>
+
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
+  <!-- AdminLTE Skins. Choose a skin from the css/skins
+  folder instead of downloading all of them to reduce the load. -->
+  <link rel="stylesheet" href="dist/css/skins/_all-skins.min.css">
+  <!-- Style -->
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Angular -->
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0-rc.1/angular.min.js"></script>
+  <!-- Angular Local Storage-->
+  <script src="angular/angular-local-storage.js"></script>
+  <!-- jQuery 2.1.4 -->
+  <script src="plugins/jQuery/jQuery-2.1.4.min.js"></script>
+  <!-- Bootstrap 3.3.5 -->
+  <script src="bootstrap/js/bootstrap.min.js"></script>
+  <!-- SlimScroll -->
+  <script src="plugins/slimScroll/jquery.slimscroll.min.js"></script>
+  <!-- FastClick -->
+  <script src="plugins/fastclick/fastclick.min.js"></script>
+  <!-- AdminLTE App -->
+  <script src="dist/js/app.min.js"></script>
+  <!-- AdminLTE for demo purposes -->
+  <script src="dist/js/demo.js"></script>
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <!-- ChartJS 1.0.1 -->
+  <script src="plugins/chartjs/Chart.min.js"></script>
+  <!-- App js -->
+  <script type="text/javascript" src="app/app.js"></script>
+  <!-- Services -->
+  <script src="app/services/weather-service.js"></script>
+  <!-- Controllers -->
+  <script src="app/controllers/weather-controller.js"></script>
+</head>
+
+<body class="hold-transition skin-green layout-top-nav" ng-app="Forecast" ng-controller="WeatherController">
+  <!-- Header -->
+  <div class="wrapper">
+    <div class="main-header">
+      <div class="navbar navbar-static-top">
+        <div class="container">
+          <div class="navbar-header">
+            <a href="#" class="navbar-brand">Previsão do Tempo</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-wrapper">
+      <div class="container">
+        <!-- Title -->
+        <div class="row">
+          <div class="col-md-12">
+            <h4>Consulte a previsão do tempo desta semana:
+              <strong ng-if="state && city"> {{city.nome + " - " + state.sigla}}</strong>
+            </h4>
+          </div>
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="box box-info">
+              <div class="box-header with-border">
+                <div class="box-tools pull-right">
+                  <button class="btn btn-box-tool" data-widget="collapse">
+                    <i class="fa fa-minus"></i>
+                  </button>
+                  <button class="btn btn-box-tool" data-widget="remove">
+                    <i class="fa fa-times"></i>
+                  </button>
+                </div>
+                <h5 class="box-title">
+                  <strong>Informe a cidade e estado</strong>
+                </h5>
+              </div>
+
+              <div class="box-body">
+                <div class="row">
+                  <!-- State -->
+                  <div class="col-md-4 col-sm6 col-xs-12" ng-init="loadStates()">
+                    <div class="form-group">
+                      <label>Estado</label>
+                      <select class="form-control select2" style="width: 100%;" ng-model="state" ng-options="state.nome for state in states | orderBy: 'nome' track by state.id"
+                        ng-change="onSelectState(state.id)">
+                        <option value="">Selecione um estado</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <!-- City -->
+                  <div class="col-md-4 col-sm6 col-xs-12">
+                    <label>Cidade</label>
+                    <select class="form-control select2" style="width: 100%;" ng-model="city" ng-options="city.nome for city in cities | orderBy: 'nome' track by city.id"
+                      ng-change="onSelectCity()">
+                      <option value="">Selecione uma cidade</option>
+                    </select>
+                  </div>
+
+                  <!-- Buttons -->
+                  <div class="col-md-4 col-sm6 col-xs-12">
+                    <center>
+                      <div class="button">
+                        <!-- Consult -->
+                        <a class="btn btn-app" ng-click="consultForecast()">
+                          <i class="glyphicon glyphicon-search"></i>
+                          Consultar
+                        </a>
+
+                        <!-- Favorite     -->
+                        <a class="btn btn-app" ng-click="salvaFavorito(cidade,estado)">
+                          <i class="glyphicon glyphicon-star-empty"></i>
+                          Favorito
+                        </a>
+                      </div>
+                    </center>
+                  </div>
+
+                  <div class="modal fade bs-example-modal-sm" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header fundoMsg">
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                          <h4 class="tituloPrevisaoMsg">
+                            <strong>Previsão do Tempo
+                              <strong>
+                          </h4>
+                        </div>
+                        <div class="modal-body colorMsg">
+                          <h5>{{msg}}</h5>
+                        </div>
+                        <div class="modal-footer fundoMsg">
+                          <button type="button" class="btn btn-ok btn-success" data-dismiss="modal">OK</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12 col-sm6 col-xs-12">
+            <div class="box box-info">
+              <!--  Forecast Days -->
+              <div class="box-header with-border">
+                <div class="box-tools pull-right">
+                  <button class="btn btn-box-tool" data-widget="collapse">
+                    <i class="fa fa-minus"></i>
+                  </button>
+                  <button class="btn btn-box-tool" data-widget="remove">
+                    <i class="fa fa-times"></i>
+                  </button>
+                </div>
+                <h5 class="box-title">
+                  <strong>Dias da Semana</strong>
+                </h5>
+              </div>
+              <div class="box-body">
+                <!-- Today -->
+                <div class="row">
+                  <div class="col-md-4 col-sm6 col-xs-12">
+                    <div class="box box-widget widget-user">
+                      <div class="widget-user-header bg-green-active">
+                        <h3 class="widget-user-username" ng-bind="forecast.data[0].date_br"></h3>
+                      </div>
+                      <div class="widget-user-image">
+                        <img class="img-circle" ng-src="{{forecastIcons[0]}}" ng-model="selectedImg">
+                      </div>
+                      <div class="box-footer temp-color">
+                        <div class="row">
+                          <div class="col-sm-6 border-right">
+                            <div class="description-block">
+                              <h5 class="description-header">Mínima</h5>
+                              <span ng-bind="forecast.data[0].temperature.min +' °'" class="description-text"></span>
+                            </div>
+                          </div>
+                          <div class="col-sm-6 border-right">
+                            <div class="description-block">
+                              <h5 class="description-header">Máxima</h5>
+                              <span ng-bind="forecast.data[0].temperature.max +' °'" class="description-text"></span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="overlay" ng-hide="loading">
+                        <i class="fa fa-refresh fa-spin"></i>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-2 col-sm6 col-xs-12">
+                    <div class="box box-widget widget-user">
+                      <div class="widget-user-header bg-green-active">
+                        <h6 ng-bind="forecast.data[1].date_br"></h6>
+                      </div>
+                      <div class="widget-user-image">
+                        <img class="img-circle" ng-src="{{forecastIcons[1]}}" ng-model="selectedImg">
+                      </div>
+                      <div class="box-footer temp-color">
+                        <div class="row">
+                          <div class="col-sm-6 border-right">
+                            <div class="description-block">
+                              <h5 class="description-header">Mínima</h5>
+                              <span ng-bind="forecast.data[1].temperature.min +' °'" class="description-text"></span>
+                            </div>
+                          </div>
+                          <div class="col-sm-6 border-right">
+                            <div class="description-block">
+                              <h5 class="description-header">Máxima</h5>
+                              <span ng-bind="forecast.data[1].temperature.max +' °'" class="description-text"></span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="overlay" ng-hide="loading">
+                        <i class="fa fa-refresh fa-spin"></i>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-2 col-sm6 col-xs-12">
+                    <div class="box box-widget widget-user">
+                      <div class="widget-user-header bg-green-active">
+                        <h6 ng-bind="forecast.data[2].date_br"></h6>
+                      </div>
+                      <div class="widget-user-image">
+                        <img class="img-circle" ng-src="{{forecastIcons[2]}}" ng-model="selectedImg">
+                      </div>
+                      <div class="box-footer temp-color">
+                        <div class="row">
+                          <div class="col-sm-6 border-right">
+                            <div class="description-block">
+                              <h5 class="description-header">Mínima</h5>
+                              <span ng-bind="forecast.data[2].temperature.min +' °'" class="description-text"></span>
+                            </div>
+
+                          </div>
+
+                          <div class="col-sm-6 border-right">
+                            <div class="description-block">
+                              <h5 class="description-header">Máxima</h5>
+                              <span ng-bind="forecast.data[2].temperature.max +' °'" class="description-text"></span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="overlay" ng-hide="loading">
+                        <i class="fa fa-refresh fa-spin"></i>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-2 col-sm6 col-xs-12">
+                    <div class="box box-widget widget-user">
+                      <div class="widget-user-header bg-green-active">
+                        <h6 ng-bind="forecast.data[3].date_br"></h6>
+                      </div>
+                      <div class="widget-user-image">
+                        <img class="img-circle" ng-src="{{forecastIcons[3]}}" ng-model="selectedImg">
+                      </div>
+                      <div class="box-footer temp-color">
+                        <div class="row">
+                          <div class="col-sm-6 border-right">
+                            <div class="description-block">
+                              <h5 class="description-header">Mínima</h5>
+                              <span ng-bind="forecast.data[3].temperature.min +' °'" class="description-text"></span>
+                            </div>
+                          </div>
+                          <div class="col-sm-6 border-right">
+                            <div class="description-block">
+                              <h5 class="description-header">Máxima</h5>
+                              <span ng-bind="forecast.data[3].temperature.max +' °'" class="description-text"></span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="overlay" ng-hide="loading">
+                        <i class="fa fa-refresh fa-spin"></i>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-2 col-sm6 col-xs-12">
+                    <div class="box box-widget widget-user">
+                      <div class="widget-user-header bg-green-active">
+                        <h6 ng-bind="forecast.data[4].date_br"></h6>
+                      </div>
+                      <div class="widget-user-image">
+                        <img class="img-circle" ng-src="{{forecastIcons[4]}}" ng-model="selectedImg">
+                      </div>
+                      <div class="box-footer temp-color">
+                        <div class="row">
+                          <div class="col-sm-6 border-right">
+                            <div class="description-block">
+                              <h5 class="description-header">Mínima</h5>
+                              <span ng-bind="forecast.data[4].temperature.min +' °'" class="description-text"></span>
+                            </div>
+                          </div>
+                          <div class="col-sm-6 border-right">
+                            <div class="description-block">
+                              <h5 class="description-header">Máxima</h5>
+                              <span ng-bind="forecast.data[4].temperature.max +' °'" class="description-text"></span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="overlay" ng-hide="loading">
+                        <i class="fa fa-refresh fa-spin"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 col-sm6 col-xs-12">
+            <div class="box box-info">
+              <div class="box-header with-border">
+                <h5 class="box-title">
+                  <strong>Temperatura</strong>
+                </h5>
+                <h4>Máxima e Mínima da Semana</h4>
+                <div class="box-tools pull-right">
+                  <button class="btn btn-box-tool" data-widget="collapse">
+                    <i class="fa fa-minus"></i>
+                  </button>
+                  <button class="btn btn-box-tool" data-widget="remove">
+                    <i class="fa fa-times"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="box-body">
+                <!-- Maximum -->
+                <div class="info-box">
+                  <span class="info-box-icon bg-red">
+                    <i class="fa fa-fw fa-arrow-up"></i>
+                  </span>
+                  <div class="info-box-content">
+                    <span class="info-box-text">
+                      <strong>Máxima</strong>
+                    </span>
+                    <span class="info-box-text">{{maxDayOfWeek.temperature.max +' º'}}</span>
+                    <span class="info-box-text">
+                      <strong>Data</strong>
+                    </span>
+                    <span class="info-box-text">{{maxDayOfWeek.date_br}}</span>
+                  </div>
+                </div>
+                <!-- Minimum -->
+                <div class="info-box">
+                  <span class="info-box-icon bg-green">
+                    <i class="fa fa-fw fa-arrow-down"></i>
+                  </span>
+                  <div class="info-box-content">
+                    <span class="info-box-text">
+                      <strong>Mínima</strong>
+                    </span>
+                    <span class="info-box-text">{{minDayOfWeek.temperature.min +' º'}}</span>
+                    <span class="info-box-text">
+                      <strong>Data</strong>
+                    </span>
+                    <span class="info-box-text">{{minDayOfWeek.date_br}}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="overlay" ng-hide="loading">
+                <i class="fa fa-refresh fa-spin"></i>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4 col-sm6 col-xs-12">
+            <!-- Recommendantions -->
+            <div class="box box-info">
+              <div class="box-header with-border">
+                <h5 class="box-title">
+                  <strong>Recomendações</strong>
+                </h5>
+                <div class="box-tools pull-right">
+                  <button class="btn btn-box-tool" data-widget="collapse">
+                    <i class="fa fa-minus"></i>
+                  </button>
+                  <button class="btn btn-box-tool" data-widget="remove">
+                    <i class="fa fa-times"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="box-body">
+                <div ng-show="goodForecast && hasWeekend">
+                  <h4>Recomendação de praia neste fim de semana</h4>
+                  <h5>A temperatura para final de semana está acima de 25 º</h5>
+                  <center>
+                    <img class="img" src="img/positivo.png" />
+                  </center>
+                </div>
+                <div ng-show="goodForecast==false && hasWeekend">
+                  <h4>Não é recomendado praia este fim de semana</h4>
+                  <h5>A temperatura para final de semana está abaixo de 25 º</h5>
+                  <div class="widget-user-image">
+                    <center>
+                      <img class="img" src="img/negativo.png" />
+                    </center>
+                  </div>
+                </div>
+                <div ng-show="hasWeekend==false">
+                  <h4>Sem recomendações</h4>
+                  <h5>Não houve final de semana nos próximos dias</h5>
+                  <div class="widget-user-image">
+                    <center>
+                      <img class="img" src="img/semprevisao.png" />
+                    </center>
+                  </div>
+                </div>
+              </div>
+              <div class="overlay" ng-hide="loading">
+                <i class="fa fa-refresh fa-spin"></i>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 col-sm6 col-xs-12">
+            <div class="box box-info">
+              <div class="box-header with-border">
+                <h5 class="box-title">
+                  <strong>Gráfico de variação de Temperatura</strong>
+                </h5>
+
+                <div class="box-tools pull-right">
+                  <button class="btn btn-box-tool" data-widget="collapse">
+                    <i class="fa fa-minus"></i>
+                  </button>
+                  <button class="btn btn-box-tool" data-widget="remove">
+                    <i class="fa fa-times"></i>
+                  </button>
+                </div>
+
+              </div>
+              <div class="box-body">
+                <div class="chart">
+                  <canvas id="areaChart" style="height:240px"></canvas>
+                </div>
+              </div>
+              <div class="overlay" ng-hide="loading">
+                <i class="fa fa-refresh fa-spin"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+</body>
+
+</html>
