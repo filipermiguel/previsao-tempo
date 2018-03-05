@@ -1,54 +1,57 @@
 ## Protótipo Previsão do Tempo
 
-## 1 – Objetivo
+Desafio Front-End
 
-Objetivo deste protótipo é realizar consulta da previsão do tempo com base na cidade e estado desejada pelo usuário. A página exibirá além da temperatura máxima e mínima do dia atual a previsão dos próximos 4 dias da semana. Onde a mesa será dividia em 5 box. Inciando pelo Box de consulta de Estado e Cidade, onde inicialmente o usuário selecionará o estado para selecionar posteriormente a cidade desejada. Ao acessar a página pela primeira vez trará a cidade e o estado padrão como “Blumenau – SC”, o usuário poderá escolher seu estado e sua cidade e salva-lá como favorito, assim toda vez que a página for acessada já trará sua cidade como padrão. O próximo Box apresenta os dias da semana com sua devida temperatura apresentando a máxima e a minima para cada dia da semana. Abaixo seguirá mais três Box, o Box Temperatura que consiste em apresentar a máxima e a mínima da semana, o Box recomendações que verificará se no sábado a temperatura for maior que 25 ° mostrará recomendação de praia positivo caso contrário negativará a recomendação de praia. E por último o Box do gráfico de variação de temperatura da semana, exibirá um gráfico linear com máximas e mínimas dos dias exibidos.
+Objetivo
 
-![alt tag](img/gitHub/3 - fullproject.jpg "1 – Objetivo")
+Construir uma página WEB para consulta de previsão do tempo, atendo os requisitos abaixo.
 
-##2 – Funcionalidades
+Eu como usuário...
+Gostaria de escolher a cidade e visualizar a previsão do dia e da semana atual.
+Gostaria de visualizar a temperatura máxima e mínima da semana;
+Gostaria de saber o que fazer, se o tempo estiver bom ou ruim, especialmente no final de semana;
+Gostaria de visualizar um gráfico demonstrando a evolução/variação da temperatura durante a semana;
 
-####2.1 – Selecionar estado e cidades
+Desenvolvimento
 
-Para carregar os estados e cidades foi utilizado um javascript que trata de carregar os dados de estado e cidade, javascript: cidades-estados-1.4-utf8.js. Para utilizar foi criado um select no HTML com ID de estado e cidade.
+Utilizar uma API que retorne os dados para o desenvolvimento dos itens acima.
 
-![alt tag](img/gitHub/1 - cidadesEstados.png "2 – Funcionalidades")
+Ao acessar a página devem ser exibidas as informações:
 
-####2.2 – Realizar consulta
+Clima de Blumenau;
+Possibilidade de alterar o Estado (combo) e a cidade (autocomplete);
+Possibilidade de definir o local escolhido como favorito; (Ao recarregar a; página, as informações do local favoritado devem ser exibidas);
 
-Para consultar os dados previsão do tempo foi utilizada um API que retorna um json(javascript object notation) com os dados da previsão. API utilizada foi http://developers.agenciaideias.com.br. Nesta API é necessário passar cidade e estado para receber o retorno em json.
+Fica a seu critério:
 
-Método que para carregar dados da API concatenando cidade e estado selecionado pela interface.
+A construção da interface;
+A utilização de uma paleta de cor;
+Forma de armazenamento local dos dados; (Não deverá existir um servidor de aplicação, nem outra linguagem de programação e nem banco de dados)
 
-![alt tag](img/gitHub/2 - consultaCidadesEstados.png "2.2 – Realizar consulta")
+Tecnologias:
+
+AngularJS1 ou AngularJS 2 (se julgar necessário);
+CSS3 (SASS ou LESS);
+jQuery (se julgar necessário);
+Esta página será exibida em um PC (22’ FullHD), em um tablet (10’ HD) e em um celular (5’ FullHD);
+HTML5 e CSS3 deve ser utilizado ao máximo;
 
 
-####2.3 – Salvar favorito
+O que será avaliado?
 
-Ao selecionar cidade e estado poderá salvá-las como favorito, assim que abrir a página novamente já carregará os dados referente a cidades-estados salvos como favorito.
+Página funcionando;
+Qualidade do código;
+Usabilidade e Experiência de uso da página;
+Uso de bibliotecas;
+Cross-browser: IE10+, Chrome e Mozilla;
+Responsivo;
 
-Método utilizado para salvar favoritos: Ao clicar no botão de favoritos salvará estado e cidade no localStorage, ao acessar novamente a página será verificado se existem dados salvos no localStorage  e carregar a previsão com base na cidades-estados favorito.
+## Considerações
 
-Método para salvar favorito:
+Realizada a implementação desta página HTML acessando as APIs de localidades do IBGE e de clima do ClimaTempo. A página é responsiva sendo testada em chrome em desktop e IPhone 7. Tive dificuldades em encontrar uma API de clima que seja gratuita e traga as informações solicitadas no teste como estado, nem todas as APIs internacionais possuem e boa parte delas é paga. De API brasileira foi encontrada a ClimaTempo porém esta não funciona com páginas HTML onde o host da máquina é localhost, sendo que o filtro CORS do servidor do ClimaTempo ou não está configurado ou está configurado para não receber requests GET de servidores deste tipo. Enfim, para funcionar foi necessário instalar um plugin no Chrome chamado Allow-Control-Allow-Origin: * para realizar estas requisições.
 
-![alt tag](img/gitHub/4 - favorito.png "2.3 – Salvar favorito")
-
-##3 – Frameworks
-
-**AdminLte:** utilizado para criação do HTML5, CSS3, Design responsivo e Bootstrap 3.
-
-**AngularJS:** utilizado o framework para o desenvolvimento da parte lógica do front-end, na requisição do json do API com dados da previsão. Na criação de métodos para auxiliar o desenvolvimento. Utilizado várias diretivas do AngularJS no front-end principalmente para fazer o Bind dos dados
-
-##4 – Conclusão
-
-A elaboração do Protótipo de Previsão do tempo foi bem gratificante por proporcionar um contato maior com ferramentas novas.
-Ao trabalhar com o AdminLte pude perceber que o design da página, onde poderia ter despendido tempo desnecessário para criação, se tornou muito mais simples e objetivo por conter várias classes já preparadas, proporcionando assim um tempo maior para a elaboração da parte lógica e funcional.
-Como mencionado o protótipo me proporcionou a oportunidade de trabalhar com o ArgularJS, um framework que já havia pesquisado mas até então nunca havia tido um contato maior. Pude notar que é a adaptação ao framework é rápida e que já se encontra disponível vários matérias onde praticamente todas as dúvidas pertinentes foram esclarecidas.
-Por fim foi uma experiência muito interessante participar desse projeto onde tive a possibilidade de trabalhar com duas frameworks novas.
-
-##5 – Referências 
-
-AdminLte: https://almsaeedstudio.com<br />
-AngularJS: https://angularjs.org/
+Mais informações sobre as APIs em:
+https://servicodados.ibge.gov.br/api/docs/localidades
+http://apiadvisor.climatempo.com.br/doc/index.html
 
 
